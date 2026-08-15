@@ -1,7 +1,7 @@
 ---
 title: "Set Up DSOM with Google Gemini"
 sidebarTitle: "Gemini"
-description: "Configure Google Gemini as your DSOM Cognitive Digital Twin using Gemini Gems, system instructions, and the reanimation manifest."
+description: "Configure Google Gemini as your DSOM Cognitive Digital Twin using Gemini Gems, custom system instructions, and the reanimation manifest."
 ---
 
 Google Gemini integrates with the DSOM framework in two complementary ways: through a **Gemini Gem** — a persistent custom agent with embedded system instructions — or by uploading a reanimation manifest directly into any Gemini chat. The Gem approach is recommended because it survives across browser sessions and requires no re-pasting of instructions; the manifest upload approach is a lightweight fallback useful on shared devices or when you want to test a configuration before committing it permanently.
@@ -201,5 +201,5 @@ The five DSOM personalisation blocks give Gemini your professional identity and 
 See `docs/PERSONALIZATION.md` in your repo for the exact text of each block.
 
 <Tip>
-  Gemini's context window is large, but manifest files grow over time. If your `sod_manifest_YYYY-MM-DD.txt` exceeds ~50,000 tokens, run `bash tools/reanimate.sh` instead — it produces a more compact, delta-only manifest optimised for context-window efficiency.
+  Gemini's context window is large, but manifest files grow over time. If you want a Claude-optimised variant of the manifest (structured for Project Knowledge upload), run `bash tools/reanimate-claude.sh` instead — it produces `DSOM-CLAUDE-INIT.md`, a sectioned manifest suited to knowledge-base uploads.
 </Tip>

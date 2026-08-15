@@ -1,5 +1,5 @@
 ---
-title: "OKF v0.1: The Open Knowledge Format Standard"
+title: "OKF v0.1: The Open Knowledge Format Standard for DSOM"
 sidebarTitle: "OKF Standard"
 description: "OKF v0.1 is DSOM's YAML frontmatter standard that makes every Markdown file programmatically indexable by AI agents and the OpenWiki engine."
 ---
@@ -149,7 +149,7 @@ uv run --with pyyaml python tools/openwiki_emulator.py --init
 If your document appears in the search results with the correct title and description, the frontmatter is valid and correctly indexed.
 
 <Warning>
-  Files without valid OKF frontmatter are silently skipped by the OpenWiki indexer and invisible to AI agents during knowledge discovery. If a document is not appearing in search results, check that the frontmatter starts on line 1 of the file, that all five required fields are present, and that the YAML is valid (no missing quotes, no tab characters).
+  Files without valid OKF frontmatter are silently skipped by the OpenWiki indexer and invisible to AI agents during knowledge discovery. If a document is not appearing in search results, check that the frontmatter starts on line 1 of the file, that all seven required fields are present, and that the YAML is valid (no missing quotes, no tab characters).
 </Warning>
 
 ## The Reserved OKF Filenames

@@ -1,5 +1,5 @@
 ---
-title: "Get Started with DSOM in Six Steps"
+title: "DSOM Quick Start: From Clone to Cognitive Handshake"
 sidebarTitle: "Quick Start"
 description: "Set up the Deep State of Mind framework, initialise your AI brain, fill in your Project Identity Card, and perform the first Cognitive Handshake."
 ---
@@ -27,7 +27,7 @@ bash tools/template-reset.sh
 
 ### Initialise the Brain
 
-Run the brain initialisation script for your platform. This creates the `.agents/brain/` directory and seeds it with the three core temporal artifacts your AI will read at the start of every session.
+Run the brain initialisation script for your platform. This creates the `.agents/brain/` directory and seeds it with the four core artifacts your AI will read at the start of every session.
 
 <CodeGroup>
 
@@ -42,20 +42,21 @@ chmod +x tools/*.sh
 
 </CodeGroup>
 
-After the script completes, your `.agents/brain/` directory contains three files:
+After the script completes, your `.agents/brain/` directory contains four files:
 
 | File | Purpose |
 |:-----|:--------|
 | `task.md` | **Present** — The AI's active checklist; what to work on right now |
 | `walkthrough.md` | **Past** — Session history log and Mental Anchors |
 | `implementation_plan.md` | **Future** — Your project roadmap and phase targets |
+| `DSOM_TEMPLATE.md` | **Template** — A blank walkthrough structure for new session entries |
 
 ### Fill in Your Project Identity Card
 
-The `docs/AI-COGNITIVE-TWIN-PROTOCOL.md` file is the most important file in the entire framework. It is your **Project Identity Card** — the document that tells the AI who you are, what your environment looks like, and how it must behave. Open it and replace every `[PLACEHOLDER]` with your real project details.
+The `docs/governance/AI-COGNITIVE-TWIN-PROTOCOL.md` file is the most important file in the entire framework. It is your **Project Identity Card** — the document that tells the AI who you are, what your environment looks like, and how it must behave. Open it and replace every `[PLACEHOLDER]` with your real project details.
 
 ```bash
-nano docs/AI-COGNITIVE-TWIN-PROTOCOL.md
+nano docs/governance/AI-COGNITIVE-TWIN-PROTOCOL.md
 ```
 
 Work through these four sections carefully:
@@ -68,10 +69,14 @@ Work through these four sections carefully:
 | **Mental Anchor §8** | Set to `"Fresh project. Phase 1 pending."` for a brand-new project | `Fresh project. Phase 1 pending.` |
 
 <Warning>
-  The AI will not operate correctly until every `[PLACEHOLDER]` in this file is filled in. The `audit-pre-flight.sh` script in the next step will explicitly flag any unfilled values and block you from proceeding.
+  The AI will not operate correctly until every `[PLACEHOLDER]` in `docs/governance/AI-COGNITIVE-TWIN-PROTOCOL.md` is filled in. The `audit-pre-flight.sh` script in the next step will explicitly flag any unfilled values and block you from proceeding.
 </Warning>
 
 ### Run the Pre-Flight Audit
+
+<Note>
+  **Infrastructure projects only:** If your project uses Ansible to manage remote nodes, complete the Ansible baseline setup before running the audit. Follow `docs/HOWTO-SETUP-ANSIBLE-BASELINE.md` inside the cloned repository, then verify connectivity with `ansible all -m ping -i inventory/hosts.yml`. The pre-flight audit will check for `inventory/hosts.yml` and warn if it is missing.
+</Note>
 
 Run the pre-flight audit to verify that your brain artifacts are in place, your Git repository is synchronised, and your Project Identity Card contains no unfilled placeholders.
 

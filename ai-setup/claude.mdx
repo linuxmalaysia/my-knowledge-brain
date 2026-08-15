@@ -32,7 +32,7 @@ Before you begin, make sure you have:
 
 ### Set the Project Instructions (The Sovereign Guard)
 
-Open **Project Settings → Instructions** and paste the block below verbatim. These instructions define Claude's persona and operating constraints for the entire lifetime of the project. Do not summarise or shorten them — every clause has a specific governance function.
+Open **Project Settings → Instructions** and paste the block below, personalising the placeholders with your own details. These instructions define Claude's persona and operating constraints for the entire lifetime of the project. Do not summarise or shorten them — every clause has a specific governance function.
 
 <CodeGroup>
 
@@ -40,8 +40,8 @@ Open **Project Settings → Instructions** and paste the block below verbatim. T
 [DSOM SOVEREIGN INSTRUCTIONS v6.1 + Palace v1.0]
 
 You are the Claude-variant of the DSOM Cognitive Digital Twin. You are a Senior
-Systems Architect assisting the project Lead Architect, who operates under
-30+ years of ICT and Open Source expertise.
+Systems Architect assisting [YOUR NAME], the project Lead Architect, who operates
+under [X]+ years of ICT and Open Source expertise.
 
 OPERATING MODEL:
 - Advisory Mode ONLY. You propose. The human approves. Ansible executes. You verify.
@@ -68,7 +68,7 @@ DSOM LAWS (non-negotiable):
 
 BRAIN SYNC:
 Your Single Source of Truth (SSoT) is the uploaded manifest file
-(e.g. sod_manifest_YYYY-MM-DD.txt) in Project Knowledge.
+(e.g. DSOM-CLAUDE-INIT.md) in Project Knowledge.
 Before proposing any action, you MUST read Section [14] Palace Registry and
 walk the relevant spatial Rooms.
 Always refer to it for the current Mental Anchor, task list, and roadmap.
@@ -88,21 +88,21 @@ Generate the Claude context manifest from your local repository:
 
 <CodeGroup>
 
-```bash Linux / WSL2 (recommended — run on T2)
-bash tools/sod-palace.sh
+```bash Linux / WSL2 (Claude-specific — recommended)
+bash tools/reanimate-claude.sh
 ```
 
-```bash Manual fallback
+```bash General manifest fallback
 bash tools/reanimate.sh
 ```
 
-```powershell Windows (PowerShell)
-.\tools\sod-palace.ps1
+```powershell Windows PowerShell (Claude-specific)
+.\tools\reanimate-claude.ps1
 ```
 
 </CodeGroup>
 
-This produces `sod_manifest_YYYY-MM-DD.txt` containing the full contents of `task.md`, `walkthrough.md`, and `implementation_plan.md`.
+`reanimate-claude.sh` produces `DSOM-CLAUDE-INIT.md` — a sectioned manifest containing the full `task.md`, `walkthrough.md`, `implementation_plan.md`, your Sovereign Constitution, and GitOps strategy, structured for direct upload to Claude Project Knowledge. The general `reanimate.sh` fallback produces `sod_manifest_YYYY-MM-DD.txt` with the same core content.
 
 Upload the generated file to **Project Knowledge** in your Claude Project settings. This file becomes Claude's long-term memory for the project.
 
@@ -122,19 +122,23 @@ Upload the generated file to **Project Knowledge** in your Claude Project settin
 
 <CodeGroup>
 
-```bash Linux / WSL2
-bash tools/sod-palace.sh
+```bash Linux / WSL2 (Claude-specific)
+bash tools/reanimate-claude.sh
 ```
 
-```powershell Windows (PowerShell)
-.\tools\sod-palace.ps1
+```bash General fallback
+bash tools/reanimate.sh
+```
+
+```powershell Windows PowerShell (Claude-specific)
+.\tools\reanimate-claude.ps1
 ```
 
 </CodeGroup>
 
 ### Upload the New Manifest
 
-Go to your Claude Project → **Project Knowledge** → delete yesterday's manifest → upload today's `sod_manifest_YYYY-MM-DD.txt`.
+Go to your Claude Project → **Project Knowledge** → delete yesterday's manifest → upload today's `DSOM-CLAUDE-INIT.md` (or `sod_manifest_YYYY-MM-DD.txt` if you used the fallback script).
 
 ### Send the Cognitive Handshake
 

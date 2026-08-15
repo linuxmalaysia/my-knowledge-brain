@@ -29,7 +29,7 @@ This dual-file pattern ensures DSOM governance is **immediately discoverable** b
 |---|---|
 | Google Jules | Reads root `AGENTS.md` automatically when scanning the repository |
 | GitHub Copilot | Reads root `AGENTS.md` + `.github/copilot-instructions.md` |
-| Cursor | Reads root `AGENTS.md` + `.cursor/rules` directory or MCP server |
+| Cursor | Reads root `AGENTS.md` + `.cursorrules` file or MCP server |
 | Claude Desktop | Connects via the FastMCP server (`tools/mcp/server.py`) |
 
 ### Google Jules
@@ -54,7 +54,7 @@ CRITICAL: Advisory Mode only. Do not execute commands on remote nodes.
 Cursor is among the most DSOM-native compatible tools due to its Context Awareness features. Point its rules file at the DSOM master protocol:
 
 ```text
-# .cursor/rules
+# .cursorrules
 
 YOU ARE A DSOM-COMPLIANT AGENT.
 BEFORE ANSWERING, READ: docs/AI-MASTER-PROTOCOL.md

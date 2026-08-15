@@ -1,5 +1,5 @@
 ---
-title: "OpenWiki: Zero-Binary AI Knowledge Graph"
+title: "OpenWiki: Zero-Binary AI Knowledge Graph for DSOM Projects"
 sidebarTitle: "OpenWiki Overview"
 description: "OpenWiki is a native Python knowledge graph emulator that pre-distils your codebase into lightweight metadata, reducing AI token costs by up to 98%."
 ---
@@ -31,15 +31,17 @@ This design eliminates the two most common friction points in Windows-based deve
 
 ## What Gets Indexed
 
-OpenWiki indexes any Markdown file in your repository that carries OKF v0.1 YAML frontmatter. A file must include all five required fields to appear in the knowledge graph:
+OpenWiki indexes any Markdown file in your repository that carries OKF v0.1 YAML frontmatter. A file must include all seven required fields to appear in the knowledge graph:
 
 ```yaml
 ---
 okf_version: 0.1
 type: documentation
 title: "My Document Title"
+timestamp: "2026-01-15T10:00:00Z"
 topics: ["dsom", "ansible", "gitops"]
 description: "A clear one-sentence summary of what this document contains."
+resource: "file:///docs/my-document.md"
 ---
 ```
 

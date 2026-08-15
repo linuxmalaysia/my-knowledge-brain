@@ -1,5 +1,5 @@
 ---
-title: "Start Your AI Day: The DSOM SOD Ritual"
+title: "DSOM Start-of-Day: Sync Your Project State and Brief Your AI"
 sidebarTitle: "Start of Day"
 description: "Run the DSOM Start-of-Day ritual to pull the latest project state, verify the Sovereign Palace, and brief your AI for the day's work."
 ---
@@ -45,7 +45,7 @@ If any pre-flight check returns `[FAIL]`, stop here and fix the issue before con
 If you plan to upload the generated manifest to a hosted AI service (Gemini, Claude, ChatGPT), scan it first to ensure no sensitive data — IP addresses, API keys, tokens, or private paths — is inadvertently included.
 
 ```bash
-./tools/privacy-guardian.sh
+bash tools/privacy-guardian.sh
 ```
 
 The scanner checks for: IPv4 addresses, email addresses, API keys, AWS access keys, GitHub tokens, PEM private keys, and Linux home directory paths. Only proceed to Step 3 once the scan returns `CLEAN`.

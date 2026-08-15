@@ -1,5 +1,5 @@
 ---
-title: "Close Your AI Day: The DSOM EOD Ritual"
+title: "DSOM End-of-Day: Commit Context, Export Hibernation Notes"
 sidebarTitle: "End of Day"
 description: "Run the DSOM End-of-Day ritual to consolidate AI context, export Hibernation Notes, sync the Sovereign Palace, and push your state to Git."
 ---
@@ -32,12 +32,12 @@ Your AI will produce two updates:
 Before saving, verify that the Mental Anchor describes the precise stopping point and that tomorrow's SOD tasks are specific and actionable. Nothing should be left vague.
 
 <Note>
-A well-written Mental Anchor looks like this: *"WSL2 scripts created and pushed [v6.1.0]. Next: run setup-wsl-almalinux10.ps1 as Administrator, bootstrap dsom-admin, verify `ansible localhost -m ping` inside dsom-control-almalinux10."* It names the exact file, the exact command, and the exact environment — so a brand-new AI session can resume in under three prompts.
+A well-written Mental Anchor looks like this: *"Dev environment scripts created and pushed [v2.0.0]. Next: run `setup-control-node.ps1` as Administrator, bootstrap the admin user, verify `ansible localhost -m ping` inside the control node."* It names the exact file, the exact command, and the exact environment — so a brand-new AI session can resume in under three prompts.
 </Note>
 
 ### Export Hibernation Notes
 
-This step exports everything your AI knows about your project — all context, instructions, progress, environment details, and decisions — into a single code block you can save locally. This export is your **insurance policy**: if the AI session is ever lost, this block contains everything needed to fully reanimate a brand-new AI agent to the exact current state, without running `reanimate.sh`.
+This step exports everything your AI knows about your project — all context, instructions, progress, environment details, and decisions — into a single code block you can save locally. This export is your **insurance policy**: if the AI session is ever lost, this block contains everything needed to fully reanimate a brand-new AI agent to the exact current state, without any additional tooling.
 
 Copy the following prompt verbatim and paste it into your AI chat **before closing the session**:
 
@@ -104,12 +104,30 @@ The script runs the following sequence automatically:
 
 After the script completes, you may be prompted to review a `palace_update_proposal_YYYY-MM-DD.md` file. Share this file with your AI, update the relevant closets in `.agents/brain/wings/`, and commit those changes before sleeping.
 
+<Note>
+**Alternative: Manual Hibernation Check.** If you are not running Ansible on your machine, or prefer a lighter-weight EOD save, you can use the standalone Hibernation script instead of `eod-palace.sh`. It validates your brain artifacts, auto-generates Hibernation Notes from today's commits, shows all uncommitted files, and performs a selective `git add` → commit → push without requiring Ansible.
+
+<CodeGroup>
+
+```bash Linux / WSL2 (T2)
+bash tools/hibernation.sh
+```
+
+```powershell Windows PowerShell (T1)
+.\tools\hibernation.ps1
+```
+
+</CodeGroup>
+
+The Hibernation script checks that `task.md` contains completed `[x]` items and that `walkthrough.md` has a Session Anchor dated today. If either check fails, the script blocks the commit and tells you exactly what to fix. Version 2.1 and later also runs the Palace Spatial Reflection step automatically before committing.
+</Note>
+
 ### Privacy Scan
 
 If you generated a `sod_manifest_YYYY-MM-DD.txt` today — or if the EOD script produced an anomaly manifest — scan it before sharing or storing it externally.
 
 ```bash
-./tools/privacy-guardian.sh
+bash tools/privacy-guardian.sh
 ```
 
 The scan checks for leaked IPv4 addresses, email addresses, API keys, AWS access keys, GitHub tokens, PEM private keys, and Linux home directory paths. If the scan finds anything, edit the manifest manually to remove the sensitive data, then re-run the scan until it returns `CLEAN`.
@@ -122,7 +140,7 @@ If you pushed from Windows (T1), pull the latest state on your WSL2 Dev Bridge (
 git pull origin main
 ```
 
-Run this inside your WSL2 environment (`dsom-control-almalinux10` or your configured Dev Bridge). T1 and T2 must always be at the same commit before you close your terminal.
+Run this inside your WSL2 Dev Bridge environment. T1 and T2 must always be at the same commit before you close your terminal.
 
 </Steps>
 

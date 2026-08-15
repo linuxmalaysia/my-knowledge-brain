@@ -1,5 +1,5 @@
 ---
-title: "DSOM Built-In Skills Registry Reference"
+title: "DSOM Built-In Skills Registry: All 17 Agent Skills"
 sidebarTitle: "Skills Registry"
 description: "Complete reference for all 17 pre-built AI Agent Skills that ship with DSOM, including their paths, triggers, and automation targets."
 ---
@@ -17,10 +17,10 @@ The table below lists all 17 built-in skills with their exact file paths and pri
 | **DSOM Project Cloner** | `.agents/skills/dsom-project-cloner/SKILL.md` | Scaffolds a new DSOM project by copying baseline assets to a target path |
 | **EOD Palace Sync** | `.agents/skills/eod-palace-sync/SKILL.md` | Hibernation ritual to externalise memory into the Palace and push to Git |
 | **Forensic Log Audit** | `.agents/skills/forensic-log-audit/SKILL.md` | Parses AI conversation transcripts to extract exact historical terminal commands |
-| **Initialise GitOps** | `.agents/skills/initialise-gitops/SKILL.md` | Establishes the foundational GitOps repository and Genesis DSOM architecture |
+| **Initialise GitOps** | `.agents/skills/initialize-gitops/SKILL.md` | Establishes the foundational GitOps repository and Genesis DSOM architecture |
 | **LaTeX Proposal Compiler** | `.agents/skills/latex-proposal-compiler/SKILL.md` | Compiles a Markdown proposal document into a PDF using Pandoc and XeLaTeX |
-| **Node Proposal Formatter** | `.agents/skills/node-proposal-formatter/SKILL.md` | Formats Markdown proposals using Node wrappers |
-| **Node Slide Generator** | `.agents/skills/node-slide-generator/SKILL.md` | Generates HTML/PDF slide decks from Markdown via Node/Marp |
+| **Node Proposal Formatter** | `.agents/skills/node-proposal-formatter/SKILL.md` | Compiles Markdown proposals into DOCX files using Node.js and the docx package |
+| **Node Slide Generator** | `.agents/skills/node-slide-generator/SKILL.md` | Generates PowerPoint presentations from Markdown outlines via Node.js and pptxgenjs |
 | **ODP Slide Generator** | `.agents/skills/odp-slide-generator/SKILL.md` | Generates LibreOffice Impress ODP presentations from Markdown |
 | **OKF Frontmatter Injector** | `.agents/skills/okf-frontmatter-injector/SKILL.md` | Scans a directory and auto-injects OKF v0.1 YAML frontmatter into Markdown files |
 | **Palace Auditor** | `.agents/skills/palace-auditor/SKILL.md` | Crawls the workspace to verify links and maintain the Sovereign Memory Palace |
@@ -41,7 +41,7 @@ The table below lists all 17 built-in skills with their exact file paths and pri
   |:---|:---|:---|
   | **DSOM Bootstrap** | `.agents/skills/dsom-bootstrap/SKILL.md` | Use when starting a brand-new project and you need the full `.agents/` directory structure, Palace, and AGENTS.md rulebook created from scratch. |
   | **DSOM Project Cloner** | `.agents/skills/dsom-project-cloner/SKILL.md` | Use when you want to scaffold a new project by copying a validated DSOM baseline — all governance documents, skill stubs, and brain structure — into a new target path. |
-  | **Initialise GitOps** | `.agents/skills/initialise-gitops/SKILL.md` | Use when establishing the foundational GitOps repository for a project, including the Genesis DSOM architecture, remote configuration, and initial commit structure. |
+  | **Initialise GitOps** | `.agents/skills/initialize-gitops/SKILL.md` | Use when establishing the foundational GitOps repository for a project, including the Genesis DSOM architecture, remote configuration, and initial commit structure. |
   | **Persona Injector** | `.agents/skills/persona-injector/SKILL.md` | Use when onboarding a new operator — this skill guides you through defining your Sovereign Persona profile and permanently injects it into the core `.agents/AGENTS.md` rulebook. |
 
   **Example trigger:** *"Bootstrap DSOM for my new infrastructure project."*
@@ -66,9 +66,9 @@ The table below lists all 17 built-in skills with their exact file paths and pri
   | Skill | Path | When to Use |
   |:---|:---|:---|
   | **LaTeX Proposal Compiler** | `.agents/skills/latex-proposal-compiler/SKILL.md` | Use when compiling a Markdown proposal document into a polished PDF. Invokes Pandoc with XeLaTeX as the PDF engine, applying your project's LaTeX template. |
-  | **Node Proposal Formatter** | `.agents/skills/node-proposal-formatter/SKILL.md` | Use when formatting a Markdown proposal using Node-based wrappers — suitable for projects where XeLaTeX is unavailable or a Node pipeline is preferred. |
+  | **Node Proposal Formatter** | `.agents/skills/node-proposal-formatter/SKILL.md` | Use when compiling a Markdown proposal into a DOCX file using the Node.js pipeline — suitable for projects where XeLaTeX is unavailable or a Node/docx workflow is preferred. |
   | **Proposal DOCX Formatter** | `.agents/skills/proposal-docx-formatter/SKILL.md` | Use when stakeholders require a Microsoft Word DOCX deliverable. Converts your Markdown proposal using Pandoc with the project's reference DOCX template. |
-  | **Node Slide Generator** | `.agents/skills/node-slide-generator/SKILL.md` | Use when generating HTML or PDF slide decks from Markdown via the Node/Marp pipeline. Ideal for technical presentations produced directly from source-controlled Markdown. |
+  | **Node Slide Generator** | `.agents/skills/node-slide-generator/SKILL.md` | Use when generating a PowerPoint presentation from a Markdown outline via Node.js and pptxgenjs. Ideal for technical presentations produced directly from source-controlled Markdown. |
   | **ODP Slide Generator** | `.agents/skills/odp-slide-generator/SKILL.md` | Use when generating a LibreOffice Impress ODP presentation from Markdown — suitable for environments where Microsoft PowerPoint is unavailable. |
   | **PDF Text Extractor** | `.agents/skills/pdf-text-extractor/SKILL.md` | Use when you need to extract raw, machine-readable text from a PDF file for analysis, indexing, or ingestion into the Palace. |
 

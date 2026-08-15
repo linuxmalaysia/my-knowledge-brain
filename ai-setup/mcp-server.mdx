@@ -14,11 +14,11 @@ It exposes three pillars of knowledge to any connected AI client:
 
 | Pillar | What It Exposes |
 |:-------|:----------------|
-| **State Resources** | Live reads of `.agents/brain/current_state.dsom`, `task.md`, and `walkthrough.md` via `dsom://state/*` URIs |
-| **Palace Search** | `search_palace(query)` — semantic or `grep`-based search across all `docs/` Palace rooms |
-| **Palace Sync** | `palace_sync()` — triggers the EOD spatial reflection engine natively from within the editor |
+| **Brain Resources** | Live reads of `.agents/brain/current_state.dsom`, `task.md`, and `walkthrough.md` via `dsom://brain/*` URIs |
+| **Palace Search** | `search_palace(query)` — full-text search across all `docs/` Palace rooms |
+| **OpenWiki Search** | `search_openwiki(query)` — metadata-first search across OKF frontmatter in `openwiki/` |
 
-When an AI client boots up and connects, it reads the state URIs immediately — achieving a "Genesis Read" of your current Mental Anchor without you typing a single prompt.
+When an AI client boots up and connects, it reads the brain state URIs immediately — achieving a "Genesis Read" of your current Mental Anchor without you typing a single prompt.
 
 <Note>
   The DSOM MCP server is for **local use only**. It reads your local repository files via `stdio` and never opens a network port or sends data to any external service. Your Sovereign Palace stays sovereign.
@@ -138,11 +138,11 @@ Commit this file to the repository so that any team member who opens the project
 
 ## Configure VS Code (Copilot)
 
-For VS Code with GitHub Copilot, add the server configuration to your workspace settings:
+For VS Code with GitHub Copilot, create or update `.vscode/mcp.json` in your workspace root. This is the standard location VS Code reads for MCP server configuration:
 
 ```json
 {
-  "github.copilot.chat.mcp.servers": {
+  "servers": {
     "dsom-palace": {
       "command": "uv",
       "args": [
@@ -157,6 +157,8 @@ For VS Code with GitHub Copilot, add the server configuration to your workspace 
 }
 ```
 
+Commit `.vscode/mcp.json` to the repository so that any team member who opens the project in VS Code gets the MCP integration automatically. VS Code requires Copilot Agent Mode to be active for MCP tools to be available in chat.
+
 ---
 
 ## What the Server Exposes
@@ -167,16 +169,20 @@ Once connected, your AI editor can query the following resources and tools witho
 
 | URI | Source File | Content |
 |:----|:------------|:--------|
-| `dsom://state/current` | `.agents/brain/current_state.dsom` | Active session state snapshot |
-| `dsom://state/task` | `.agents/brain/task.md` | Current task checklist |
-| `dsom://state/walkthrough` | `.agents/brain/walkthrough.md` | Mental Anchor and session history |
+| `dsom://brain/state` | `.agents/brain/current_state.dsom` | Active session state snapshot |
+| `dsom://brain/task` | `.agents/brain/task.md` | Current task checklist |
+| `dsom://brain/walkthrough` | `.agents/brain/walkthrough.md` | Mental Anchor and session history |
+| `dsom://governance/agents` | `.agents/AGENTS.md` | Full 27-law Sovereign Constitution |
+| `dsom://openwiki/skeleton` | `openwiki/_skeleton.md` | OpenWiki subsystem ranking and structure |
+| `dsom://openwiki/quickstart` | `openwiki/quickstart.md` | OpenWiki master entrypoint and task-routing table |
 
 ### Tools (Executable Functions)
 
 | Tool | Arguments | What It Does |
 |:-----|:----------|:-------------|
-| `search_palace(query)` | `query: string` | Searches all `docs/` Palace rooms for the query term |
-| `palace_sync()` | none | Triggers the EOD spatial reflection engine |
+| `search_palace(query)` | `query: string` | Full-text search across all `docs/` Palace rooms |
+| `search_openwiki(query)` | `query: string` | Metadata-first search over OKF frontmatter in `openwiki/` |
+| `fetch_context7_stream(tokens)` | `tokens: int` (default 83688) | Returns the Context7 RAG stream endpoint URL for external AI pipelines |
 
 ### OpenWiki Knowledge Graph
 
@@ -204,4 +210,4 @@ The MCP server was designed from the ground up to keep your Sovereign Palace sov
 | `docs/governance/DSOM-MCP-ARCHITECTURE.md` | Full architectural blueprint for the MCP server |
 | `docs/tools/HOWTO-MCP-SERVER.md` | Detailed CLI usage and troubleshooting |
 | `docs/governance/OPENWIKI-INTEGRATION-GUIDE.md` | How the OpenWiki knowledge graph is built and queried |
-| `START-HERE.md` — Entry Point 3 | Quick MCP configuration reference |
+| `START-HERE.md` — Entry Point 6 | Quick MCP configuration reference |
