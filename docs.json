@@ -81,6 +81,7 @@
           {
             "group": "AI Agent Skills",
             "pages": [
+              "AGENTS-PROMPT",
               "skills/agent-plugin-packager",
               "skills/context7-indexer",
               "skills/cross-platform-translator",
