@@ -96,6 +96,7 @@
           {
             "group": "Reference",
             "pages": [
+              "reference/cli-quick-reference",
               "reference/apply_okf_frontmatter",
               "reference/bench_brain",
               "reference/dsom_token_auditor",
