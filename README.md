@@ -1,55 +1,177 @@
-# Mintlify Starter Kit
+# my-knowledge-brain Docs Repo
 
-Use the starter kit to get your docs deployed and ready to customize.
+This repository (`linuxmalaysia/my-knowledge-brain`) is the **Mintlify docs deployment source** for [harisfazillah.mintlify.app](https://harisfazillah.mintlify.app).
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+> ⚠️ **Do not edit files in this repo directly.** This repo is auto-synced from the source repo. Manual changes here will be overwritten on the next sync.
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+## Where to edit docs
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+Edit docs in the source repo: [**linuxmalaysia/deep-state-of-mind-for-my-ai**](https://github.com/linuxmalaysia/deep-state-of-mind-for-my-ai) under the `docs-source/` folder.
 
-## AI-assisted writing
+On every push to `main` that touches `docs-source/`, a GitHub Actions workflow copies the contents into this repo and pushes to `main` here. Mintlify then rebuilds automatically.
 
-Set up your AI coding tool to work with Mintlify:
+```text
+linuxmalaysia/deep-state-of-mind-for-my-ai (source repo)
+  └── docs-source/                    ← edit here
+       ├── *.mdx
+       └── docs.json
+  └── .github/workflows/sync-docs.yml
+  └── scripts/sync_docs.py
+
+     ↓ (on push to main, paths: docs-source/**)
+
+linuxmalaysia/my-knowledge-brain (this repo, auto-synced)
+  └── *.mdx
+  └── docs.json
+
+     ↓ (Mintlify GitHub app watches main)
+
+https://harisfazillah.mintlify.app
+```
+
+## Setup checklist
+
+### ✅ Done
+
+- Mintlify deployment `harisfazillah` created
+- Git source connected: `linuxmalaysia/my-knowledge-brain` on `main`
+- Live site: [https://harisfazillah.mintlify.app](https://harisfazillah.mintlify.app)
+
+### ⬜ To do (in source repo `linuxmalaysia/deep-state-of-mind-for-my-ai`)
+
+1. **Create `docs-source/` folder** and copy the current contents of this repo into it (all `.mdx` files, `docs.json`, `logo/`, `favicon.svg`, images, etc.) as the starting point.
+2. **Add `scripts/sync_docs.py`:**
+   ```python
+   import os
+   import shutil
+   import subprocess
+   from pathlib import Path
+   SOURCE_DIR = Path("docs-source")
+   DOCS_REPO = "linuxmalaysia/my-knowledge-brain"
+   BRANCH = "main"
+   TOKEN = os.environ["DOCS_REPO_TOKEN"]
+   def run(cmd, cwd=None):
+       subprocess.run(cmd, cwd=cwd, check=True, shell=isinstance(cmd, str))
+   def main():
+       tmp = Path("/tmp/docs-repo")
+       if tmp.exists():
+           shutil.rmtree(tmp)
+       # Clone docs repo
+       url = f"https://x-access-token:{TOKEN}@github.com/{DOCS_REPO}.git"
+       run(["git", "clone", "--branch", BRANCH, url, str(tmp)])
+       # Wipe old docs content (keep .git)
+       for item in tmp.iterdir():
+           if item.name == ".git":
+               continue
+           if item.is_dir():
+               shutil.rmtree(item)
+           else:
+               item.unlink()
+       # Copy new content
+       shutil.copytree(SOURCE_DIR, tmp, dirs_exist_ok=True)
+       # Commit and push
+       run(["git", "config", "user.email", "bot@example.com"], cwd=tmp)
+       run(["git", "config", "user.name", "Docs Sync Bot"], cwd=tmp)
+       run(["git", "add", "-A"], cwd=tmp)
+       result = subprocess.run(["git", "diff", "--staged", "--quiet"], cwd=tmp)
+       if result.returncode == 0:
+           print("No changes")
+           return
+       run(["git", "commit", "-m", "Sync docs from source repo"], cwd=tmp)
+       run(["git", "push", "origin", BRANCH], cwd=tmp)
+       print("Synced")SOURCE_DIR = Path("docs-source")
+   DOCS_REPO = "linuxmalaysia/my-knowledge-brain"
+   BRANCH = "main"
+   TOKEN = os.environ["DOCS_REPO_TOKEN"]
+   def run(cmd, cwd=None):
+       subprocess.run(cmd, cwd=cwd, check=True, shell=isinstance(cmd, str))
+   def main():
+       tmp = Path("/tmp/docs-repo")
+       if tmp.exists():
+           shutil.rmtree(tmp)
+       # Clone docs repo
+       url = f"https://x-access-token:{TOKEN}@github.com/{DOCS_REPO}.git"
+       run(["git", "clone", "--branch", BRANCH, url, str(tmp)])
+       # Wipe old docs content (keep .git)
+       for item in tmp.iterdir():
+           if item.name == ".git":
+               continue
+           if item.is_dir():
+               shutil.rmtree(item)
+           else:
+               item.unlink()
+       # Copy new content
+       shutil.copytree(SOURCE_DIR, tmp, dirs_exist_ok=True)
+       # Commit and push
+       run(["git", "config", "user.email", "bot@example.com"], cwd=tmp)
+       run(["git", "config", "user.name", "Docs Sync Bot"], cwd=tmp)
+       run(["git", "add", "-A"], cwd=tmp)
+       result = subprocess.run(["git", "diff", "--staged", "--quiet"], cwd=tmp)
+       if result.returncode == 0:
+           print("No changes")
+           return
+       run(["git", "commit", "-m", "Sync docs from source repo"], cwd=tmp)
+       run(["git", "push", "origin", BRANCH], cwd=tmp)
+       print("Synced")
+   if __name__ == "__main__":
+       main()
+   ```
+3. **Add `.github/workflows/sync-docs.yml`:**
+   ```yaml
+   name: Sync Docs
+   on:
+     push:
+       branches: [main]
+       paths:
+         - "docs-source/**"
+   jobs:
+     sync:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - uses: actions/setup-python@v5
+           with:
+             python-version: "3.11"
+         - name: Sync docs
+           env:
+             DOCS_REPO_TOKEN: ${{ secrets.DOCS_REPO_TOKEN }}
+           run: python scripts/sync_docs.py
+   ```
+4. **Create a fine-grained Personal Access Token:**
+   - Go to [https://github.com/settings/tokens](https://github.com/settings/tokens) → **Fine-grained tokens** → **Generate new token**
+   - Repository access: `linuxmalaysia/my-knowledge-brain`
+   - Permissions: **Contents: Read and write**
+   - Copy the token
+5. **Add token as a secret in the source repo:**
+   - `linuxmalaysia/deep-state-of-mind-for-my-ai` → **Settings → Secrets and variables → Actions → New repository secret**
+   - Name: `DOCS_REPO_TOKEN`
+   - Value: paste token
+6. **Test the pipeline:**
+   - Make a small edit to a file under `docs-source/` in the source repo
+   - Commit and push to `main`
+   - Watch the workflow run in the **Actions** tab
+   - Confirm this repo receives the sync commit
+   - Confirm [https://harisfazillah.mintlify.app](https://harisfazillah.mintlify.app) rebuilds
+
+## Rules
+
+- ❌ Do NOT edit files in this repo (`my-knowledge-brain`) directly
+- ❌ Do NOT edit in the Mintlify web editor (changes will be overwritten)
+- ✅ Only edit `docs-source/` in `linuxmalaysia/deep-state-of-mind-for-my-ai`
+- ✅ Push to `main` → auto-sync → Mintlify rebuild
+
+## Local preview (in source repo)
 
 ```bash
-npx skills add https://mintlify.com/docs
-```
-
-This command installs Mintlify's documentation skill for your configured AI tools like Claude Code, Cursor, Windsurf, and others. The skill includes component reference, writing standards, and workflow guidance.
-
-See the [AI tools guides](/ai-tools) for tool-specific setup.
-
-## Development
-
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
-
-```
+cd docs-source
 npm i -g mint
-```
-
-Run the following command at the root of your documentation, where your `docs.json` is located:
-
-```
 mint dev
 ```
 
-View your local preview at `http://localhost:3000`.
+Preview at [http://localhost:3000](http://localhost:3000).
 
-## Publishing changes
+## Resources
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
-
-## Need help?
-
-### Troubleshooting
-
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
 - [Mintlify documentation](https://mintlify.com/docs)
+- [Live site](https://harisfazillah.mintlify.app)
+- [Source repo (edit docs here)](https://github.com/linuxmalaysia/deep-state-of-mind-for-my-ai)
