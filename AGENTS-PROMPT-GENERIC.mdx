@@ -1,0 +1,332 @@
+---
+title: "AGENTS PROMPT (Generic, Reusable)"
+sidebarTitle: "Generic Prompt"
+description: "Reusable AI agent prompt to build any project's docs as a user-manual Mintlify site with a hardened one-way sync pipeline and safety guards."
+hidden: true
+---
+
+# AI agent prompt: user-manual Mintlify site \+ safe docs sync (generic)
+
+Use this template for **any project** that wants a user-manual style Mintlify docs site fed by a hardened one-way sync from an app repo. Fill in the placeholders in the **Fixed values** block, then paste everything between `## Prompt (copy from here)` and `## End of prompt` into a capable AI coding agent (Claude Code, Cursor, Copilot Workspace, Aider, etc.).
+
+The agent works **inside the app repo** and produces the Markdown → MDX compiler, `docs-source/` seed, safety-guarded sync script, GitHub Actions workflow, governance docs, and tests. Content style is locked to **end-user manual**, not internal engineering notes.
+
+---
+
+## Prompt (copy from here)
+
+You are working inside the GitHub repository `<OWNER>/<APP_REPO>` (the "app repo"). Your job is to:
+
+1. Compile plain Markdown in `docs/` (and optionally `skills/`) into a polished **user-manual Mintlify site** under `docs-source/`.
+2. Set up a one-way, guarded sync pipeline that pushes `docs-source/` into the downstream Mintlify repo `<OWNER>/<DOCS_REPO>` (the "docs repo"), deployed at `https://<SUBDOMAIN>.mintlify.app`.
+
+The docs repo is never edited by humans, agents, or the Mintlify web editor. Sync is strictly one-way. Never force-push.
+
+### Fixed values (fill in before running)
+
+- App repo (source of truth, edit here): `<OWNER>/<APP_REPO>`
+- Docs repo (Mintlify-connected, downstream, DO NOT EDIT DIRECTLY): `<OWNER>/<DOCS_REPO>`
+- Mintlify subdomain: `<SUBDOMAIN>.mintlify.app`
+- Branch on both repos: `main`
+- Native Markdown source in app repo: `docs/` (and optionally `skills/`)
+- Compiled Mintlify MDX in app repo: `docs-source/`
+- Target in docs repo: repo root
+- Sync bot identity: name `Docs Sync Bot`, email `bot@<SUBDOMAIN>.mintlify.app` (or a project-owned mailbox)
+- Product / project display name: `<PRODUCT_NAME>`
+- One-line product value prop: `<PRODUCT_VALUE_PROP>`
+- Primary audience: end users and integrators of `<PRODUCT_NAME>` (NOT internal maintainers)
+
+### Content mandate: this site is a USER MANUAL
+
+Everything the compiler emits and every hand-authored `.mdx` MUST read as an **end-user manual** for `<PRODUCT_NAME>`. Non-negotiable.
+
+**What this means in practice**
+
+- Write for the person USING `<PRODUCT_NAME>`, not the person building or deploying it.
+- Every page answers one of: "What is this?", "How do I do X?", "What does this setting/field mean?", "What went wrong and how do I fix it?".
+- Lead with the reader's goal, then the steps, then the reference detail.
+- Second person ("you"), active voice, imperative mood for instructions.
+- Show working, copy-pasteable examples with expected output where useful.
+- No em dashes (—) or en dashes (–) as punctuation. Use commas, colons, parentheses, or split the sentence.
+- Never invent product facts. If a fact is not in `docs/`, `skills/`, or explicit source material, leave a `TODO:` marker in the body (never in frontmatter) and continue.
+
+**INCLUDE (user-manual scope)**
+
+- Getting started: signup, install, first successful action, first working example.
+- Core concepts: product terminology, mental model, key workflows.
+- How-to guides: step-by-step walkthroughs of real user tasks.
+- Tutorials: end-to-end scenarios a new user can follow.
+- Public API / SDK / CLI reference with request/response or command examples.
+- Configuration users actually control through the product UI or public config files.
+- Integrations, webhooks, extension points users set up themselves.
+- Troubleshooting and FAQ written from a user perspective.
+- Governance and legal pages users need (security policy, legal notice, license summary) when applicable.
+
+**EXCLUDE (do not document, even if present in the source repo)**
+
+- Internal microservice architecture, service boundaries, internal RPC.
+- Database schemas, migrations, ORM internals.
+- CI/CD pipelines, deployment scripts, infra-as-code, Kubernetes manifests (unless the product IS the infra).
+- Internal admin tools, back-office dashboards.
+- Business-logic implementation details, refactors, ADRs.
+- Auth SYSTEM internals (OAuth provider wiring, session management, middleware, token storage, RBAC implementation). Document ONLY how the user obtains and uses their credentials.
+- Server/runtime configuration users never touch (ports, containers, reverse proxies, env vars used only by ops).
+- Dependency management, lockfiles, linter/build config.
+- Contribution guides, code review process, internal onboarding.
+
+**The litmus test**: if a customer using `<PRODUCT_NAME>` through its public interface would never need to know something, do not document it. When in doubt, drop it.
+
+### User manual site style (MANDATORY for the compiler and any hand-authored MDX)
+
+**Frontmatter on every `.mdx` (required)**
+
+```yaml
+---
+title: "<50–60 char SEO title, unique across the site>"
+sidebarTitle: "<1–3 word Title Case label>"
+description: "<130–155 chars, unique, adds info beyond the title>"
+---
+```
+
+Rules:
+
+- `sidebarTitle` is mandatory and short. Never put the full SEO title in the sidebar. Never repeat `<PRODUCT_NAME>` in the sidebar (it's already in the logo).
+- First paragraph of the body MUST be plain prose (no component, no code fence) that names the feature and states what the page covers or teaches. Never a verbatim restatement of title or description.
+- Titles use Title Case. Sidebar labels use Title Case. Group and tab names use Title Case.
+
+**Information architecture (`docs-source/docs.json`)**
+
+- `navigation` MUST be an object with `tabs` (preferred when there are multiple major sections) or `groups`. NEVER an array.
+- Hard limits: at most 2–3 tabs, at most 4–5 groups per tab, never a group with fewer than 2 pages. Merge thin groups.
+- Group and tab names: Title Case, 1–3 words ("Get Started", "Guides", "Reference", "Troubleshooting").
+- Page paths in navigation: extensionless, no leading slash, matching the written file exactly (`guides/first-integration`, never `/guides/first-integration.mdx`).
+- `index` IS the landing page; do NOT create a separate `introduction` page alongside it. `quickstart` is a real, working first-run page, not a stub.
+- Suggested top-level shape (adapt group names to what actually exists in `docs/` and `skills/`, keep the compact shape):
+  ```json
+  {
+    "navigation": {
+      "tabs": [
+        {
+          "tab": "Documentation",
+          "groups": [
+            { "group": "Get Started", "pages": ["index", "quickstart", "core-concepts"] },
+            { "group": "Guides",      "pages": ["guides/..."] },
+            { "group": "Tutorials",   "pages": ["tutorials/..."] },
+            { "group": "How-To",      "pages": ["how-to/..."] }
+          ]
+        },
+        {
+          "tab": "Reference",
+          "groups": [
+            { "group": "Reference",   "pages": ["reference/..."] },
+            { "group": "Explanation", "pages": ["explanation/..."] },
+            { "group": "Governance",  "pages": ["governance/...", "security", "legal-notice"] }
+          ]
+        }
+      ]
+    }
+  }
+  ```
+
+**Landing page (`index.mdx`)**
+
+- Uses Mintlify components only. No raw HTML, no Tailwind, no inline styles, no `"mode": "custom"`.
+- Opens with a short welcome paragraph naming `<PRODUCT_NAME>` and its value prop.
+- Includes a `<CardGroup cols={2}>` of `<Card>` entries with valid `href`s and Font Awesome `icon`s linking to Quickstart, Core Concepts, primary Guides, and Reference.
+- Optionally a `<Steps>` block with 3–4 onboarding steps.
+
+**Content components (use where they fit)**
+
+- `<Steps>` / `<Step title="…">` for any sequential instructions (setup, task walkthroughs, recovery).
+- `<CodeGroup>` for multi-language or multi-shell examples.
+- `<Tabs>` / `<Tab>` for alternative views (e.g. GUI vs CLI, macOS vs Windows).
+- `<Accordion>` for FAQ-style details.
+- `<Card>` and `<CardGroup>` for ALL card-like UI. Never hand-roll cards with `<div>`/`<a>`.
+- `<Note>`, `<Tip>`, `<Info>`, `<Warning>` for callouts. Use `<Warning>` for anything that could break state, cost money, or violate governance.
+- Fenced code blocks with a language tag and, where useful, a filename/title, `lines`, `highlight={…}`, `expandable`, or `wrap`. Never wrap code blocks in styled divs.
+
+**Compiler behavior (`tools/build_mintlify_mdx.py`)**
+
+- Traverse `docs/` and `skills/` (if present). For every `.md` file, produce a mirrored `.mdx` under `docs-source/` at the same relative path (extension changed).
+- Parse existing YAML frontmatter (OKF or standard). If `title`, `sidebarTitle`, or `description` are missing, synthesize them:
+  - `title` from the first H1 or the filename humanized.
+  - `sidebarTitle` = 1–3 word Title Case derivative of `title` (strip `<PRODUCT_NAME>`, trim after colon).
+  - `description` = first meaningful paragraph, trimmed/padded to 130–155 chars, never a copy of the title.
+- Preserve source wording. Convert Markdown to MDX only where required (escape `<`/`{` in prose that is not intended as JSX, rewrite relative links to extensionless page paths, normalize image paths to `/images/...`).
+- Copy binary assets (`docs/images/**`, `logo/**`, `favicon.*`) into `docs-source/` at the mirrored path.
+- Emit `docs-source/docs.json` from scratch each run following the IA rules above. Every page path listed MUST correspond to a written `.mdx`. Every written `.mdx` SHOULD appear in navigation; log a warning for orphans but do not fail the build (Guard C handles missing files; orphans stay a warning).
+- Deterministic ordering: within each group, order pages by an optional `order:` frontmatter key, then alphabetically by `sidebarTitle`.
+- Idempotent: running the script twice with no source changes produces byte-identical `docs-source/`.
+- UTF-8 safe on Windows and Linux (`open(..., encoding="utf-8")`, reconfigure stdout where needed). Python 3.11\+, standard library only.
+
+### Deliverables
+
+Produce all of the following. Do not stop after the first item.
+
+#### 0. `tools/build_mintlify_mdx.py`
+
+Implement the compiler described in **User manual site style** above. Running `python tools/build_mintlify_mdx.py` from the app repo root must (re)generate `docs-source/` and `docs-source/docs.json` from `docs/` (and `skills/` if present), and exit non-zero on any parse or write error.
+
+#### 1. Seed `docs-source/`
+
+- `docs/` (native Markdown, plus optional `skills/`) is the single source of truth. Do not clone the downstream docs repo to seed content; the compiler generates `docs-source/`.
+- Run `python tools/build_mintlify_mdx.py` once from the app repo root. This must populate `docs-source/` with all initial `.mdx` files and a valid `docs-source/docs.json` that follows the **User manual site style** rules above.
+- Copy any binary assets not represented as Markdown (logos, favicon, images) into `docs-source/` so Mintlify can resolve them.
+- Verify locally that `docs-source/` renders on a Mintlify preview before the first sync: at minimum, `index.mdx`, `quickstart.mdx`, and every page listed in `docs-source/docs.json` must exist. Report the file count.
+
+#### 2. `scripts/sync_docs.py`
+
+A Python 3.11 script with all five guards below. Any failed guard MUST exit non-zero BEFORE touching the docs repo.
+
+Env vars the script reads:
+
+- `DOCS_REPO_TOKEN` (required): fine-grained PAT for the docs repo.
+- `MIN_MDX_FILES` (default `5`)
+- `MAX_DELETIONS` (default `10`)
+- `ALLOW_LARGE_DELETIONS` (default `false`)
+- `DRY_RUN` (default `false`)
+- CLI flag `--dry-run` equivalent to `DRY_RUN=true`.
+
+Guards, run in order:
+
+- **Guard A — Source & JSON integrity**: fail if `docs-source/` is missing or `docs-source/docs.json` is missing/invalid JSON.
+- **Guard B — Minimum file count floor**: count `.mdx` under `docs-source/`. Fail if below `MIN_MDX_FILES`. Print the count.
+- **Guard C — Navigation integrity**: parse `docs.json`. Walk `navigation.tabs[].groups[].pages` AND `navigation.groups[].pages` (support nested groups). Assert `docs-source/<page>.mdx` exists for every referenced path. Fail with the list of missing files. Warn on orphan `.mdx` not in navigation.
+- **Guard D — Diff preview & deletion cap**: clone `<OWNER>/<DOCS_REPO>` (branch `main`) with `DOCS_REPO_TOKEN` into a temp dir. Compute `files_added`, `files_modified`, `files_deleted` between `docs-source/` and the clone (exclude `.git`). Print counts and lists. Fail if `len(files_deleted) > MAX_DELETIONS` unless `ALLOW_LARGE_DELETIONS=true`.
+- **Guard E — Dry-run**: if `DRY_RUN=true` or `--dry-run`, print the plan and exit 0.
+
+Only after all guards pass:
+
+1. Wipe the docs repo working tree (keep `.git`).
+2. Copy `docs-source/` into it.
+3. Configure git user `Docs Sync Bot <bot@<SUBDOMAIN>.mintlify.app>`.
+4. `git add -A`. If no staged changes, print `No changes` and exit 0.
+5. Commit: `Sync docs from app repo @ <app-repo-short-sha>`.
+6. Push to `origin main`. Never `--force`.
+7. Print summary: files added / modified / deleted / total copied.
+
+Requirements: idempotent, stdlib only, exit non-zero on any subprocess failure with error printed. UTF-8 console encoding safe.
+
+#### 3. `.github/workflows/sync-docs.yml`
+
+Triggers:
+
+- `push` to `main` with `paths: [docs/**, skills/**, docs-source/**, tools/build_mintlify_mdx.py, scripts/sync_docs.py]`.
+- `workflow_dispatch` with inputs:
+  - `dry_run` (boolean, default `true`)
+  - `allow_large_deletions` (boolean, default `false`)
+  - `min_mdx_files` (string, default `"5"`)
+  - `max_deletions` (string, default `"10"`)
+
+Steps, in order:
+
+1. `actions/checkout@v4`.
+2. `actions/setup-python@v5` with `python-version: "3.11"`.
+3. `python tools/build_mintlify_mdx.py` — compile sources into `docs-source/`. Fails the job on any compiler error.
+4. `python scripts/sync_docs.py` — runs Guards A–E and then syncs.
+
+Env:
+
+- `DOCS_REPO_TOKEN` from `secrets.DOCS_REPO_TOKEN`.
+- On `workflow_dispatch`: `DRY_RUN`, `ALLOW_LARGE_DELETIONS`, `MIN_MDX_FILES`, `MAX_DELETIONS` from inputs.
+- On `push`: safe defaults (`DRY_RUN=false`, `ALLOW_LARGE_DELETIONS=false`, `MIN_MDX_FILES=5`, `MAX_DELETIONS=10`).
+
+On failure, print `Sync failed — check the guard output above and fix docs-source/`.
+
+#### 4. `AGENTS.md` in the app repo
+
+Rule name: **"Mintlify One-Way Docs Sync & Safety Guards Mandate"**.
+
+Content:
+
+- Native Markdown lives in `docs/` (and `skills/`). Edit there.
+- `docs-source/` is compiler output. Do not hand-edit `docs-source/` unless fixing a compiler bug in `tools/build_mintlify_mdx.py`.
+- Never edit `<OWNER>/<DOCS_REPO>` directly.
+- Never edit in the Mintlify web editor.
+- Rebuild before committing: `python tools/build_mintlify_mdx.py`, then `python scripts/sync_docs.py --dry-run`.
+- New `docs.json` navigation entries must have a matching `.mdx` under `docs-source/` in the same commit (Guard C).
+- Follow the **User manual site style** rules in `AGENTS-PROMPT.md` for every new page: SEO title, short `sidebarTitle`, unique description, opening prose paragraph, Mintlify components, USER-MANUAL scope only.
+- Never disable a guard. Never force-push.
+- Links to downstream repo `https://github.com/<OWNER>/<DOCS_REPO>` and live site `https://<SUBDOMAIN>.mintlify.app`.
+- Include recovery procedure (item 5).
+
+Also add to the downstream repo `README.md` (via `docs-source/README.md`):
+
+> Auto-synced from `<OWNER>/<APP_REPO>/docs-source/`. Do NOT edit here or via the Mintlify web editor.
+
+#### 5. Recovery procedure
+
+```bash
+git clone https://github.com/<OWNER>/<DOCS_REPO>.git
+cd <DOCS_REPO>
+git log --oneline
+git revert <bad-sync-sha>
+git push origin main
+```
+
+Then fix `docs/` in the app repo, recompile, and re-run the workflow with `dry_run=true`.
+
+#### 6. `docs-source/.mintignore`
+
+Include at least:
+
+```text
+AGENTS.md
+AGENTS-PROMPT.md
+drafts/
+*.draft.mdx
+```
+
+#### 7. Automated tests
+
+- `tests/test_mintlify_mdx_builder.py` — unit tests for `tools/build_mintlify_mdx.py`:
+  - Frontmatter parsing (OKF and standard YAML), including synthesis of `sidebarTitle` and `description` when missing.
+  - Markdown → MDX text transforms (escaping, link rewriting to extensionless paths, image path normalization).
+  - `docs.json` assembly: shape is an object with `tabs`/`groups`, every page path in navigation has a written `.mdx`, deterministic ordering.
+  - Idempotency: two consecutive runs produce byte-identical output.
+- `tests/test_sync_docs.py` — unit tests for each guard in `scripts/sync_docs.py`:
+  - Guard A: missing `docs-source/` and invalid `docs.json` both fail.
+  - Guard B: file count below `MIN_MDX_FILES` fails; at/above passes.
+  - Guard C: navigation entry with no `.mdx` fails; orphan `.mdx` warns but passes.
+  - Guard D: deletion count above `MAX_DELETIONS` fails unless `ALLOW_LARGE_DELETIONS=true`.
+  - Guard E: `DRY_RUN=true` and `--dry-run` both exit 0 without touching the downstream repo.
+
+Tests must run with `python -m unittest` (stdlib only) and pass in CI.
+
+### Manual steps for the user (print at end)
+
+1. Create a fine-grained PAT at [https://github.com/settings/tokens](https://github.com/settings/tokens):
+   - Repo access: `<OWNER>/<DOCS_REPO>` only.
+   - Permissions: **Contents: Read and write**.
+   - Do NOT use a classic token.
+2. Add as secret `DOCS_REPO_TOKEN` in the app repo.
+3. Trigger `Sync Docs` workflow with `dry_run=true`, review the diff.
+4. Re-run with `dry_run=false` for the first real sync.
+5. Enable branch protection on `main` in `<OWNER>/<DOCS_REPO>`.
+
+### Constraints
+
+- One-way sync only. Never build reverse sync.
+- Fine-grained PAT only, never classic.
+- Never force-push. Never disable a guard. Never bypass dry-run for first-time or after-recovery.
+- If a guard fails, fix `docs/` (source) or `tools/build_mintlify_mdx.py` (compiler), not the guard.
+- Never commit the PAT to any file. Reference only via `secrets.DOCS_REPO_TOKEN` and env `DOCS_REPO_TOKEN`.
+- Do not push to the docs repo from your local machine.
+- Content stays inside the **user-manual scope** defined above. If a page drifts into internal-engineering territory, cut it.
+
+### Acceptance criteria
+
+- `tools/build_mintlify_mdx.py` compiles `docs/` (and `skills/`) into `docs-source/` following the **User manual site style** rules, and produces a valid `docs-source/docs.json` (navigation is an object, tabs ≤ 3, groups ≤ 5 per tab, every listed path has an `.mdx`).
+- Every generated `.mdx` has `title`, `sidebarTitle`, and `description` in frontmatter and opens with a plain prose paragraph.
+- `index.mdx` renders as a user-manual landing page using `<CardGroup>` / `<Card>` (and optionally `<Steps>`), with no raw HTML or `mode: custom`.
+- All pages stay within the user-manual INCLUDE list; nothing in the EXCLUDE list appears.
+- `scripts/sync_docs.py` implements Guards A–E and passes a manual dry-run.
+- `.github/workflows/sync-docs.yml` exposes both triggers with the specified inputs and env wiring, and runs the compiler before the sync script.
+- `AGENTS.md` present with rules, workflow, style pointer, and recovery procedure. Downstream `README.md` carries the "auto-synced, do not edit" notice.
+- `docs-source/.mintignore` includes `AGENTS.md` and `AGENTS-PROMPT.md`.
+- `tests/test_mintlify_mdx_builder.py` and `tests/test_sync_docs.py` pass under `python -m unittest`.
+- Manual steps printed for the user.
+
+---
+
+## End of prompt

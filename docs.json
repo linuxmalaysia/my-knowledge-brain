@@ -115,7 +115,8 @@
               "skills/render-deployment",
               "skills/sitemap-seo-generator",
               "skills/sod-palace-sync",
-              "skills/ssh-passwordless-setup"
+              "skills/ssh-passwordless-setup",
+              "AGENTS-PROMPT-GENERIC"
             ]
           }
         ]
