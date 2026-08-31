@@ -37,6 +37,8 @@
               "how-to/generate-sitemaps-seo",
               "how-to/google-search-console",
               "how-to/index",
+              "how-to/install-gitea-ansible",
+              "how-to/install-gitea-podman-quadlet",
               "how-to/run-fastmcp-server",
               "how-to/use-openwiki-emulator"
             ]
