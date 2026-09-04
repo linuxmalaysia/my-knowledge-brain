@@ -33,6 +33,7 @@
           {
             "group": "How-To",
             "pages": [
+              "how-to/howto-produce-technical-handbook-blueprint",
               "how-to/audit-and-apply-frontmatter",
               "how-to/generate-sitemaps-seo",
               "how-to/google-search-console",
@@ -71,6 +72,7 @@
               "skills/dsom-release-manager",
               "skills/dsom-signature-injector",
               "skills/dsom-state-sync",
+              "skills/dsom-technical-book-compiler",
               "skills/dsom-token-calculator",
               "skills/eod-palace-sync",
               "skills/forensic-log-audit",
@@ -198,6 +200,7 @@
               "governance/python-uv-environment-guide",
               "governance/research-reasoning-gap",
               "governance/sop-knowledge-first-discovery",
+              "governance/technical-book-design-and-pdf-compiler-prompt-guide",
               "governance/zero-global-memory"
             ]
           }
