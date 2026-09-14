@@ -147,6 +147,7 @@
           {
             "group": "Explanation",
             "pages": [
+              "explanation/attested-computations-okf",
               "explanation/diataxis",
               "explanation/index",
               "explanation/openwiki-mcp-architecture"
