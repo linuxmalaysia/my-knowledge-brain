@@ -38,8 +38,10 @@
               "how-to/generate-sitemaps-seo",
               "how-to/google-search-console",
               "how-to/index",
+              "how-to/install-and-use-qmd-search",
               "how-to/install-gitea-ansible",
               "how-to/install-gitea-podman-quadlet",
+              "how-to/panduan-pemasangan-dan-penggunaan-qmd",
               "how-to/run-fastmcp-server",
               "how-to/use-openwiki-emulator"
             ]
@@ -98,6 +100,7 @@
               "skills/persona-injector",
               "skills/proposal-docx-formatter",
               "skills/publish-to-blogger",
+              "skills/qmd-search",
               "skills/render-deployment",
               "skills/sitemap-seo-generator",
               "skills/sod-palace-sync",
